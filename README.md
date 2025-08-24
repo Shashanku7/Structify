@@ -53,6 +53,19 @@ pip install -r requirements-dev.txt
 > This ensures that imports like `from structify.core.parser import parse` work correctly, and avoids `ModuleNotFoundError`.  
 > (You only need to do this once per environment.)
 
+### 2.1. Configure your `.env` file
+
+Structify uses a `.env` file at the project root for secrets and configuration (loaded with `python-dotenv`).
+
+**Example `.env` format:**
+```
+GOOGLE_GEMINI_API_KEY=api-key-here
+```
+Replace `api-key-here` with your actual Gemini API key.
+
+You can obtain a Gemini API key from the official Google AI Studio:  
+https://aistudio.google.com/app/apikey
+
 ### 3. As a Python Library
 
 ```python
