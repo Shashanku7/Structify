@@ -42,6 +42,17 @@ pip install -r requirements.txt
 pip install -r requirements-dev.txt
 ```
 
+> **Important:**  
+> If you plan to use Structify as a CLI, Python module, or with Streamlit, and your folder structure includes `src/structify`,  
+> **you must install Structify in editable mode** from your project root before running commands or launching the app:
+>
+> ```sh
+> pip install -e .
+> ```
+>
+> This ensures that imports like `from structify.core.parser import parse` work correctly, and avoids `ModuleNotFoundError`.  
+> (You only need to do this once per environment.)
+
 ### 3. As a Python Library
 
 ```python
@@ -61,7 +72,7 @@ python -m structify "FastAPI backend + React frontend" my_project
 ### 5. As a Web App
 
 ```sh
-streamlit run structify_web.py
+streamlit run src/structify/app.py
 ```
 - Visit [http://localhost:8501](http://localhost:8501), enter your project description, and get the structure!
 
@@ -119,6 +130,30 @@ Open `helper.txt` for guidance on what to put in each file.
 - Code: See the `src/structify` directory.
 - Test: `pytest`
 - Format: `black`, `isort`
+
+---
+
+## ⚠️ Troubleshooting: ModuleNotFoundError
+
+If you see an error like:
+```
+ModuleNotFoundError: No module named 'structify.core'
+```
+or similar import errors when running:
+```sh
+streamlit run src/structify/app.py
+# or
+python -m structify ...
+```
+**This means Python can't find your package because it hasn't been installed in editable mode.**
+
+**Solution:**  
+From your project root directory, run:
+```sh
+pip install -e .
+```
+Then try your command again.  
+This will make sure `streamlit run src/structify/app.py` works and finds all your modules.
 
 ---
 
