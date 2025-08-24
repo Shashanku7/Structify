@@ -18,7 +18,14 @@ Structify lets you create a ready-to-start codebase layout—just by describing 
 
 ## ⚡️ Quickstart
 
-### 1. Create and Activate a Virtual Environment (Recommended)
+### 1. Clone the Repository
+
+```sh
+git clone https://github.com/Shashanku7/Structify.git
+cd Structify
+```
+
+### 2. Create and Activate a Virtual Environment (Recommended)
 
 It's best practice to isolate your Python dependencies in a virtual environment:
 
@@ -34,7 +41,7 @@ python -m venv .venv
 .venv\Scripts\activate
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
 
 ```sh
 pip install -r requirements.txt
@@ -53,7 +60,7 @@ pip install -r requirements-dev.txt
 > This ensures that imports like `from structify.core.parser import parse` work correctly, and avoids `ModuleNotFoundError`.  
 > (You only need to do this once per environment.)
 
-### 2.1. Configure your `.env` file
+### 3.1. Configure your `.env` file
 
 Structify uses a `.env` file at the project root for secrets and configuration (loaded with `python-dotenv`).
 
@@ -66,7 +73,9 @@ Replace `api-key-here` with your actual Gemini API key.
 You can obtain a Gemini API key from the official Google AI Studio:  
 https://aistudio.google.com/app/apikey
 
-### 3. As a Python Library
+Other API keys or configuration variables may be required depending on which AI providers or features you use.
+
+### 4. As a Python Library
 
 ```python
 from structify import generate_project
@@ -74,7 +83,7 @@ from structify import generate_project
 generate_project("Flask app with PostgreSQL and Docker")
 ```
 
-### 4. As a Command-Line Tool
+### 5. As a Command-Line Tool
 
 ```sh
 python -m structify "Flask app with PostgreSQL and Docker"
@@ -82,7 +91,7 @@ python -m structify "Flask app with PostgreSQL and Docker"
 python -m structify "FastAPI backend + React frontend" my_project
 ```
 
-### 5. As a Web App
+### 6. As a Web App
 
 ```sh
 streamlit run src/structify/app.py
