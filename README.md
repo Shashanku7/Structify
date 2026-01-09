@@ -10,7 +10,7 @@ Structify lets you create a ready-to-start codebase layout—just by describing 
 
 Try Structify directly in your browser (no setup required):
 
-👉 **https://APP_NAME.streamlit.app**
+👉 **https://structify-tool.streamlit.app/**
 
 Enter a project description and instantly get a generated project structure as a downloadable ZIP file containing a detailed `helper.txt`.
 

@@ -27,7 +27,7 @@ def get_gemini_api_keys() -> List[str]:
     print(f"[🔑] Found {len(keys)} Gemini API key(s) available")
     return keys
 
-def google_gemini_with_rotation(prompt: str, max_tokens: int = 4096, max_retries: int = 3) -> str:
+def google_gemini_with_rotation(prompt: str, max_tokens: int = 10000, max_retries: int = 3) -> str:
     """
     Try multiple Gemini API keys with rotation.
     If one hits quota, automatically try the next one.
@@ -93,7 +93,7 @@ def google_gemini_with_rotation(prompt: str, max_tokens: int = 4096, max_retries
     # All keys exhausted
     raise RuntimeError(f"All {len(api_keys)} Gemini API keys exhausted!")
 
-def smart_ai_request(prompt: str, max_tokens: int = 4096) -> Tuple[str, str]:
+def smart_ai_request(prompt: str, max_tokens: int = 10000) -> Tuple[str, str]:
     """Request with multi-key rotation."""
     print("[DEBUG] Using Gemini with key rotation...")
     try:
