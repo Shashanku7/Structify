@@ -10,6 +10,15 @@ Templates module for Structify (AI-driven, using Gemini API , single-helper-file
 from typing import List, Dict
 import os
 
+SCAFFOLD_NOTE = """NOTE:
+This project is a scaffold.
+All files are intentionally created empty.
+The folder structure is the primary output.
+Code, configurations, and implementations are left to the developer by design.
+
+---
+"""
+
 def get_project_structure(root_path: str) -> Dict[str, List[str]]:
     """
     Recursively walk the project directory, returning a mapping:
@@ -25,68 +34,43 @@ def get_project_structure(root_path: str) -> Dict[str, List[str]]:
 
 def generate_helper_file_content(
     project_type: str,
-    project_structure: Dict[str, List[str]],
     features: List[str],
-    description: str
+    helpers: Dict[str, str]
 ) -> str:
     """
-    Generate the content for helper.txt using Gemini.
-    Includes docstring-style suggestions and relevant example code (as comments) for each file/folder.
+    Generates the content for helper.txt.
+    - All generated explanations are expected to be present in `helpers` (produced by parser module).
+    - This function is responsible ONLY for formatting helper.txt.
     """
-    try:
-        from .parser import smart_ai_request
-        # Prepare a summary of the structure for the prompt
-        structure_str = ""
-        for folder, files in project_structure.items():
-            prefix = f"{folder}/" if folder else ""
-            for file in files:
-                structure_str += f"- {prefix}{file}\n"
-        prompt = f"""
-You are an expert software project architect.
 
-Given a {project_type} project with this description:
-{description}
+    lines: List[str] = []
+    lines.append(SCAFFOLD_NOTE.rstrip())
+    lines.append("STRUCTIFY PROJECT HELPER")
+    lines.append(f"Project type: {project_type}")
+    lines.append(f"Features: {', '.join(features)}")
+    lines.append("")
+    lines.append("File guidance:")
 
-Features requested: {', '.join(features)}
+    if not helpers:
+        lines.append("")
+        lines.append("⚠️ AI helper content unavailable.")
+        lines.append("The project structure was generated successfully,")
+        lines.append("but detailed file-level guidance could not be retrieved.")
+        return "\n".join(lines)
 
-Here is the list of files and folders in the project:
+    for path, explanation in helpers.items():
+        lines.append("")
+        lines.append(f"{path}:")
+        lines.append(f"  {explanation}")
 
-{structure_str}
-
-For each folder and file (recursively), write a docstring-style suggestion (and a short example code as a comment if relevant) describing what should be implemented there.
-Use the appropriate comment style for each file type (e.g., triple quotes for Python, // for JS, etc).
-Organize your answer clearly by folder.
-DO NOT write actual implementation except possibly a short illustrative code snippet inside the docstring/comment if relevant.
-Output only the helper file content, suitable for saving as helper.txt.
-"""
-        _, content = smart_ai_request(prompt, max_tokens=30000)
-        if content and len(content.strip()) > 10:
-            return content.strip()
-    except Exception as e:
-        print(f"[⚠️] Gemini helper file generation failed: {e}")
-
-    # Minimal fallback if AI fails
-    helper_lines = [
-        f"STRUCTIFY PROJECT HELPER",
-        f"Project type: {project_type}",
-        f"Description: {description}",
-        f"Features: {', '.join(features)}",
-        "",
-        "Project structure and suggestions:"
-    ]
-    for folder, files in project_structure.items():
-        prefix = f"{folder}/" if folder else ""
-        for file in files:
-            helper_lines.append(f"{prefix}{file}:")
-            helper_lines.append(f"  # Suggest what should be implemented here.")
-            helper_lines.append("")
-    return "\n".join(helper_lines)
+    return "\n".join(lines)
 
 def create_helper_file(
     project_type: str,
     root_path: str,
     features: List[str],
     description: str,
+    helpers: Dict[str, str] = {},
     helper_filename: str = "helper.txt"
 ) -> str:
     """
@@ -94,7 +78,7 @@ def create_helper_file(
     Returns the path to the helper file.
     """
     project_structure = get_project_structure(root_path)
-    content = generate_helper_file_content(project_type, project_structure, features, description)
+    content = generate_helper_file_content(project_type,features, helpers)
     helper_path = os.path.join(root_path, helper_filename)
     with open(helper_path, "w", encoding="utf-8") as f:
         f.write(content)

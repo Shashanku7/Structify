@@ -6,6 +6,15 @@ Structify lets you create a ready-to-start codebase layout—just by describing 
 
 ---
 
+## 🌐 Live Web App
+
+Try Structify directly in your browser (no setup required):
+
+👉 **https://APP_NAME.streamlit.app**
+
+Enter a project description and instantly get a generated project structure as a downloadable ZIP file containing a detailed `helper.txt`.
+
+
 ## 🚀 Features
 
 - **Natural Language to Structure**: Describe your project in English (e.g. `"Flask app with PostgreSQL and Docker"`) and Structify builds the skeleton.
@@ -191,11 +200,11 @@ Shashank U
 
 ---
 
-## 🤖 How does it work?
+##  How does it work?
 
-- Parses your description using AI (e.g., Gemini, OpenRouter, etc).
+- Parses your description using AI (e.g., Gemini, OpenRouter, etc) with automatic API key rotation.
 - Recursively builds the project skeleton.
-- Calls AI again to generate a single, detailed `helper.txt` at the root, with docstring-style instructions and code snippets for each file/folder.
+- Generates a single, detailed `helper.txt` at the root using the AI-provided explanations for each file/folder.
 
 No code is implemented for you—just the structure and expert guidance!
 

@@ -8,6 +8,7 @@ After all files/folders are created, generates a single AI-powered helper file v
 
 from pathlib import Path
 import yaml
+import os
 import re
 from datetime import datetime
 
@@ -34,6 +35,7 @@ def merge_structures(defaults: dict, custom: dict) -> dict:
     merged["description"] = custom.get("description", "Structify Project")
     merged["features"] = custom.get("features", [])
     merged["project_name"] = custom.get("project_name", None)
+    merged["helpers"] = custom.get("helpers", {})
     return merged
 
 MAX_FOLDERNAME_LENGTH = 35
@@ -68,26 +70,22 @@ def generate_project(structure: dict, output_dir: str = "generated_project") -> 
     """Generate folders and files from AI-driven project structure, each project in its own subfolder."""
     defaults = load_defaults(structure.get("project_type", "generic"))
     merged_structure = merge_structures(defaults, structure)
-
-    # Use project_name if present, otherwise use sanitized description, else 'Project'
-    project_name = (
-        merged_structure.get("project_name")
-        or merged_structure.get("description")
-        or "Project"
-    )
-    project_folder = sanitize_folder_name(project_name)
-    base = Path(output_dir) / project_folder
-    ensure_dir(base)
+    base = Path(output_dir).resolve()
+    if os.name == 'nt':  # Windows only
+        long_base = Path(f'\\\\?\\{base}')
+    else:
+        long_base = base
+    ensure_dir(long_base)
 
     # Sanitize folder and file paths to prevent absolute/wrong paths
     merged_structure["folders"] = clean_paths(merged_structure.get("folders", []))
     merged_structure["files"] = clean_paths(merged_structure.get("files", []))
 
     for folder in merged_structure["folders"]:
-        folder_path = safe_join(base, folder)
+        folder_path = safe_join(long_base, folder)
         ensure_dir(folder_path)
     for file in merged_structure["files"]:
-        file_path = safe_join(base, file)
+        file_path = safe_join(long_base, file)
         ensure_dir(file_path.parent)
         write_file(file_path, "")  # Create empty file
 
@@ -96,6 +94,7 @@ def generate_project(structure: dict, output_dir: str = "generated_project") -> 
         project_type=merged_structure["project_type"],
         root_path=base,
         features=merged_structure.get("features", []),
-        description=merged_structure.get("description", "")
+        description=merged_structure.get("description", ""),
+        helpers=merged_structure.get("helpers", {})
     )
     print(f"[✅] AI-driven project generated at: {base.resolve()}")

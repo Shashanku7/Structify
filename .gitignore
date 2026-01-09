@@ -10,6 +10,9 @@ venv/
 
 # Project outputs
 generated_project/
+*.zip
+tmp*/
+**/tmp*/
 
 # Distribution / packaging
 build/
@@ -19,3 +22,11 @@ dist/
 # Python tooling
 .coverage
 .pytest_cache/
+
+# Streamlit
+.streamlit/
+
+# OS junk
+.DS_Store
+Thumbs.db
+

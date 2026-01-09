@@ -12,8 +12,6 @@ Usage:
    $ python -m structify "Flask app with PostgreSQL and Docker"
 """
 
-from dotenv import load_dotenv
-load_dotenv()
 import sys
 from pathlib import Path
 from .core.parser import parse
